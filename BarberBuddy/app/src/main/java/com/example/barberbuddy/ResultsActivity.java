@@ -114,7 +114,7 @@ public class ResultsActivity extends AppCompatActivity {
 
             TextView label = new TextView(this);
             label.setText(shape);
-            label.setTextColor(0xFFFFFFFF);
+            label.setTextColor(0xFF333333);
             label.setTextSize(13f);
             LinearLayout.LayoutParams labelParams =
                     new LinearLayout.LayoutParams(220, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -125,8 +125,8 @@ public class ResultsActivity extends AppCompatActivity {
                     android.R.attr.progressBarStyleHorizontal);
             bar.setMax(100);
             bar.setProgress(score);
-            bar.setProgressTintList(
-                    android.content.res.ColorStateList.valueOf(0xFF00E5FF));
+            bar.setProgressTintList(android.content.res.ColorStateList.valueOf(0xFF2D4635));
+
             LinearLayout.LayoutParams barParams =
                     new LinearLayout.LayoutParams(0, 36, 1f);
             barParams.gravity = android.view.Gravity.CENTER_VERTICAL;
@@ -135,7 +135,7 @@ public class ResultsActivity extends AppCompatActivity {
 
             TextView pct = new TextView(this);
             pct.setText(score + "%");
-            pct.setTextColor(0xFF00E5FF);
+            pct.setTextColor(0xFF333333);
             pct.setTextSize(13f);
             pct.setPadding(12, 0, 0, 0);
             LinearLayout.LayoutParams pctParams =
