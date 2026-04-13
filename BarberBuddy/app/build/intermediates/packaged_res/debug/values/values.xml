@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">BarberBuddy</string>
+    <style name="Theme.BarberBuddy" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#00E5FF</item>
+        <item name="colorPrimaryVariant">#0097A7</item>
+        <item name="colorOnPrimary">#1A1A2E</item>
+        <item name="android:windowBackground">#1A1A2E</item>
+    </style>
+    <style name="Theme.BarberBuddy.Splash" parent="Theme.BarberBuddy">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>
