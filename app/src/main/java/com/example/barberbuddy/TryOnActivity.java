@@ -7,7 +7,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedFace;
@@ -19,6 +18,7 @@ import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.ux.ArFrontFacingFragment;
 import com.google.ar.sceneform.ux.AugmentedFaceNode;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +26,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class TryOnActivity extends AppCompatActivity {
 
-    // Keep your existing variables and add these two:
     private boolean mUserRequestedInstall = true;
     private boolean isArCoreChecking = false;
 
@@ -72,19 +71,15 @@ public class TryOnActivity extends AppCompatActivity {
                     .commit();
         }
 
-        // ✅ FIX: Listen for fragment attach, then wait for its VIEW to be ready
         getSupportFragmentManager().addFragmentOnAttachListener((fragmentManager, fragment) -> {
             if (fragment instanceof ArFrontFacingFragment) {
                 arFragment = (ArFrontFacingFragment) fragment;
 
                 arFragment.getViewLifecycleOwnerLiveData().observe(this, viewLifecycleOwner -> {
                     if (viewLifecycleOwner != null) {
-                        // Ensure the ArSceneView exists
                         ArSceneView sceneView = arFragment.getArSceneView();
 
                         if (sceneView != null) {
-                            // Force a check again right before the scene starts
-                            // This is the "Double-Check" to keep MIUI quiet
                             try {
                                 ArCoreApk.getInstance().requestInstall(this, false);
                             } catch (Exception e) {
@@ -108,51 +103,64 @@ public class TryOnActivity extends AppCompatActivity {
 
         try {
             isArCoreChecking = true;
-            // This forces the "Background activity launch" to become a "Foreground" one
             ArCoreApk.InstallStatus installStatus = ArCoreApk.getInstance().requestInstall(this, mUserRequestedInstall);
 
             if (installStatus == ArCoreApk.InstallStatus.INSTALL_REQUESTED) {
                 mUserRequestedInstall = false;
                 isArCoreChecking = false;
-                return; // Wait for the user to finish the install/download
+                return;
             }
-            // If we reach here, ARCore is INSTALLED and Profiles are ready
         } catch (Exception e) {
             Log.e(TAG, "ARCore installation exception", e);
         } finally {
             isArCoreChecking = false;
         }
     }
+
+    private boolean modelFileExists(String assetPath) {
+        try {
+            getAssets().open(assetPath);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     private void loadModel(Hairstyle hairstyle) {
+        String modelPath = hairstyle.getModelPath();
+
+        if (!modelFileExists(modelPath)) {
+            runOnUiThread(() -> {
+                loadingProgress.setVisibility(View.GONE);
+                Toast.makeText(this,
+                        "Error: No AR function available for this hairstyle. Wait for future updates.",
+                        Toast.LENGTH_LONG).show();
+            });
+            return;
+        }
+
         runOnUiThread(() -> loadingProgress.setVisibility(View.VISIBLE));
 
-        // ✅ Correct URI format for files in assets/
         android.net.Uri modelUri = android.net.Uri.parse(
-                "file:///android_asset/" + hairstyle.getModelPath()
+                "file:///android_asset/" + modelPath
         );
 
-        // Inside loadModel(Hairstyle hairstyle)
         loaders.add(
                 ModelRenderable.builder()
                         .setSource(this, modelUri)
                         .setIsFilamentGltf(true)
-                        .setRegistryId(hairstyle.getModelPath()) // Add this to prevent re-loading conflicts
+                        .setRegistryId(modelPath)
                         .build()
                         .thenAccept(renderable -> {
-                            // SUCCESS
                             hairRenderable = renderable;
                             hairRenderable.setShadowCaster(false);
                             hairRenderable.setShadowReceiver(false);
 
-                            // If Filament still crashes, try disabling vertex colors if your model has them
-                            // but usually, the fix is in the export settings (see Step 3)
-
                             modelLoaded = true;
                             runOnUiThread(() -> loadingProgress.setVisibility(View.GONE));
                         })
-                        // ... rest of your code
                         .exceptionally(throwable -> {
-                            Log.e(TAG, "Model load failed: " + hairstyle.getModelPath(), throwable);
+                            Log.e(TAG, "Model load failed: " + modelPath, throwable);
                             runOnUiThread(() -> {
                                 loadingProgress.setVisibility(View.GONE);
                                 Toast.makeText(this,
@@ -178,17 +186,12 @@ public class TryOnActivity extends AppCompatActivity {
 
                 for (AugmentedFace face : faceList) {
                     if (!faceNodeMap.containsKey(face)) {
-                        // 1. The Face Node (Tracks the face movements)
                         AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
                         faceNode.setParent(sceneView.getScene());
 
-                        // 2. The Hair Node (This holds the actual 3D model)
                         com.google.ar.sceneform.Node hairNode = new com.google.ar.sceneform.Node();
                         hairNode.setParent(faceNode);
                         hairNode.setRenderable(hairRenderable);
-
-                        // Removed manual Scale, Position, and Rotation adjustments.
-                        // The model will now use its original internal coordinates relative to the face center.
 
                         faceNodeMap.put(face, faceNode);
                     }
@@ -207,8 +210,6 @@ public class TryOnActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     @Override
     protected void onDestroy() {

@@ -50,6 +50,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
+    // CircleImageView for rounded profile images
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
     // ... inside dependencies ...
 // SceneView for ARCore (3D Rendering)
     implementation("com.gorisse.thomas.sceneform:sceneform:1.23.0")

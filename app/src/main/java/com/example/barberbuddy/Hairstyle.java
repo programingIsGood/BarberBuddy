@@ -6,29 +6,18 @@ public class Hairstyle {
     private int id;
     private String name;
     private int imageRes;
+    private int overlayRes;
     private List<String> suitableFaceShapes;
     private String description;
-    private String maintenanceLevel;   // Low / Medium / High
-    private int overlayRes;
-    private List<String> suitableFaceShapes;    private String description;
     private String maintenanceLevel;
     private String maintenanceTips;
     private String trend;
-    private String modelPath; // Path in assets/models/
+    private String modelPath;
 
     public Hairstyle(int id, String name, int imageRes, int overlayRes,
                      List<String> suitableFaceShapes, String description,
-                     String maintenanceLevel, String maintenanceTips, String trend,
-                     String modelPath) { // Updated constructor
-    public Hairstyle(int id,
-                     String name,
-                     int imageRes,
-                     List<String> suitableFaceShapes,
-                     String description,
-                     String maintenanceLevel,
-                     String maintenanceTips,
-                     String trend) {
-
+                     String maintenanceLevel, String maintenanceTips,
+                     String trend, String modelPath) {
         this.id = id;
         this.name = name;
         this.imageRes = imageRes;
@@ -41,38 +30,6 @@ public class Hairstyle {
         this.modelPath = modelPath;
     }
 
-    // GETTERS
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getImageRes() {
-        return imageRes;
-    }
-
-    public List<String> getSuitableFaceShapes() {
-        return suitableFaceShapes;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getMaintenanceLevel() {
-        return maintenanceLevel;
-    }
-
-    public String getMaintenanceTips() {
-        return maintenanceTips;
-    }
-
-    public String getTrend() {
-        return trend;
-    }
     public int getId() { return id; }
     public String getName() { return name; }
     public int getImageRes() { return imageRes; }
@@ -82,5 +39,5 @@ public class Hairstyle {
     public String getMaintenanceLevel() { return maintenanceLevel; }
     public String getMaintenanceTips() { return maintenanceTips; }
     public String getTrend() { return trend; }
-    public String getModelPath() { return modelPath; } // Added getter
+    public String getModelPath() { return modelPath; }
 }

@@ -9,65 +9,69 @@ import java.util.Map;
 public class HairstyleRepository {
 
     private static final List<Hairstyle> ALL_STYLES = new ArrayList<>(Arrays.asList(
-            new Hairstyle(1, "Textured Crop", R.drawable.style_textured_crop,
-                    Arrays.asList("Round", "Square", "Triangle", "Diamond"),
-                    "Short on sides with textured, choppy top. Adds angles and definition.",
-                    "Low", "Apply matte clay to damp hair.", "Trending"),
-
-            new Hairstyle(2, "Classic Pompadour", R.drawable.style_pompadour,
-                    Arrays.asList("Round", "Oblong", "Heart", "Diamond"),
-                    "High volume swept back from the forehead. Elongates rounder faces.",
-                    "High", "Use strong-hold pomade and blow-dry upward.", "Classic"),
-
-            new Hairstyle(3, "Buzz Cut", R.drawable.style_buzz_cut,
-                    Arrays.asList("Oval", "Square", "Oblong", "Diamond"),
-                    "Clean, ultra-short all over. Works best with angular features.",
-                    "Low", "Trim every 2–3 weeks.", "Timeless"),
-
-            new Hairstyle(4, "Side Part", R.drawable.style_side_part,
-                    Arrays.asList("Oval", "Square", "Heart", "Triangle"),
-                    "Clean gentleman's cut with a defined side part. Adds structure.",
-                    "Medium", "Use a fine-tooth comb and light pomade.", "Classic"),
-
-            new Hairstyle(5, "Modern Quiff", R.drawable.style_quiff,
-                    Arrays.asList("Oval", "Round", "Heart", "Triangle"),
-                    "Swept-up front volume with tapered sides. Versatile and modern.",
-                    "Medium", "Blow-dry forward then push back at the front.", "Trending"),
-
-            new Hairstyle(6, "Undercut", R.drawable.style_undercut,
-                    Arrays.asList("Oval", "Square", "Oblong", "Diamond"),
-                    "Shaved sides with long top. Creates bold contrast.",
-                    "Medium", "Clean up sides weekly.", "Trending"),
-
-            new Hairstyle(7, "Caesar Cut", R.drawable.style_caesar,
-                    Arrays.asList("Oval", "Round", "Square", "Triangle"),
-                    "Short, horizontally-fringed cut. Low-maintenance and flattering.",
-                    "Low", "Light styling cream on damp hair.", "Classic"),
-
-            new Hairstyle(8, "Slick Back", R.drawable.style_slick_back,
-                    Arrays.asList("Oval", "Oblong", "Heart", "Diamond"),
-                    "All hair combed straight back. Sophisticated and confident.",
-                    "Medium", "Apply pomade and comb straight back.", "Classic")
-    ));
-    // DEFINED ONLY ONCE
-    // Inside HairstyleRepository.java
-    private static final List<Hairstyle> ALL_STYLES = new ArrayList<>(Arrays.asList(
             new Hairstyle(1, "Textured Crop",
                     R.drawable.style_textured_crop,
-                    R.drawable.hair_pomp_overlay,
-                    Arrays.asList("Round", "Square", "Triangle"), // Fixed caret here
-                    "Short on sides with textured, choppy top.",
-                    "Low", "Apply matte clay.", "Trending",
-                    "models/textured_crop.glb"), // Added model path
+                    R.drawable.hair_crop_overlay,
+                    Arrays.asList("Round", "Square", "Triangle", "Diamond"),
+                    "Short on sides with textured, choppy top. Adds angles and definition.",
+                    "Low", "Apply matte clay to damp hair.", "Trending",
+                    "models/textured_crop.glb"),
 
             new Hairstyle(2, "Classic Pompadour",
                     R.drawable.style_pompadour,
                     R.drawable.hair_pomp_overlay,
-                    Arrays.asList("Round", "Oblong", "Heart"),
-                    "High volume swept back.",
-                    "High", "Use strong-hold pomade.", "Classic",
-                    "models/pompadour.glb")
-            // Repeat for other styles...
+                    Arrays.asList("Round", "Oblong", "Heart", "Diamond"),
+                    "High volume swept back from the forehead. Elongates rounder faces.",
+                    "High", "Use strong-hold pomade and blow-dry upward.", "Classic",
+                    "models/pompadour.glb"),
+
+            new Hairstyle(3, "Buzz Cut",
+                    R.drawable.style_buzz_cut,
+                    R.drawable.hair_buzz_overlay,
+                    Arrays.asList("Oval", "Square", "Oblong", "Diamond"),
+                    "Clean, ultra-short all over. Works best with angular features.",
+                    "Low", "Trim every 2–3 weeks.", "Timeless",
+                    "models/buzz_cut.glb"),
+
+            new Hairstyle(4, "Side Part",
+                    R.drawable.style_side_part,
+                    R.drawable.hair_sidepart_overlay,
+                    Arrays.asList("Oval", "Square", "Heart", "Triangle"),
+                    "Clean gentleman's cut with a defined side part. Adds structure.",
+                    "Medium", "Use a fine-tooth comb and light pomade.", "Classic",
+                    "models/side_part.glb"),
+
+            new Hairstyle(5, "Modern Quiff",
+                    R.drawable.style_quiff,
+                    R.drawable.hair_quiff_overlay,
+                    Arrays.asList("Oval", "Round", "Heart", "Triangle"),
+                    "Swept-up front volume with tapered sides. Versatile and modern.",
+                    "Medium", "Blow-dry forward then push back at the front.", "Trending",
+                    "models/quiff.glb"),
+
+            new Hairstyle(6, "Undercut",
+                    R.drawable.style_undercut,
+                    R.drawable.hair_undercut_overlay,
+                    Arrays.asList("Oval", "Square", "Oblong", "Diamond"),
+                    "Shaved sides with long top. Creates bold contrast.",
+                    "Medium", "Clean up sides weekly.", "Trending",
+                    "models/undercut.glb"),
+
+            new Hairstyle(7, "Caesar Cut",
+                    R.drawable.style_caesar,
+                    R.drawable.hair_caesar_overlay,
+                    Arrays.asList("Oval", "Round", "Square", "Triangle"),
+                    "Short, horizontally-fringed cut. Low-maintenance and flattering.",
+                    "Low", "Light styling cream on damp hair.", "Classic",
+                    "models/caesar.glb"),
+
+            new Hairstyle(8, "Slick Back",
+                    R.drawable.style_slick_back,
+                    R.drawable.hair_slick_overlay,
+                    Arrays.asList("Oval", "Oblong", "Heart", "Diamond"),
+                    "All hair combed straight back. Sophisticated and confident.",
+                    "Medium", "Apply pomade and comb straight back.", "Classic",
+                    "models/slick_back.glb")
     ));
 
     public static List<Hairstyle> getRecommendations(FaceShapeAnalyzer.FaceShapeResult result) {
@@ -93,7 +97,6 @@ public class HairstyleRepository {
         return resultList;
     }
 
-    // FIXED: Smarter filtering that handles "Round Face" or "Round & Oval"
     public static List<Hairstyle> getForFaceShape(String inputShape) {
         List<Hairstyle> result = new ArrayList<>();
         if (inputShape == null || inputShape.isEmpty()) return result;
@@ -102,10 +105,9 @@ public class HairstyleRepository {
 
         for (Hairstyle h : ALL_STYLES) {
             for (String suitableShape : h.getSuitableFaceShapes()) {
-                // Check if the input string contains the keyword (e.g., "Round" in "Round Face")
                 if (searchStr.contains(suitableShape.toLowerCase())) {
                     result.add(h);
-                    break; // Found a match for this hairstyle, move to next
+                    break;
                 }
             }
         }

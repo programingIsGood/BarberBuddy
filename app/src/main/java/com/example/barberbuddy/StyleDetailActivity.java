@@ -30,39 +30,24 @@ public class StyleDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Views
         ImageView imgStyle = findViewById(R.id.imgStyleDetail);
-
         TextView tvName = findViewById(R.id.tvDetailName);
         TextView tvDesc = findViewById(R.id.tvDetailDescription);
         TextView tvTips = findViewById(R.id.tvDetailTips);
         TextView tvTrend = findViewById(R.id.tvDetailTrend);
         TextView tvMaintChip = findViewById(R.id.tvDetailMaintenanceChip);
         TextView tvMaintLevel = findViewById(R.id.tvDetailMaintenanceLevelChip);
-        TextView tvSuitable = findViewById(R.id.tvSuitableFor);
+        TextView tvSuitableFor = findViewById(R.id.tvSuitableFor);
         TextView tvMatchBadge = findViewById(R.id.tvMatchBadge);
-        // Safety check: if no hairstyle found, go back
-        if (h == null) { finish(); return; }
-
-        // 3. Update the UI
-        ImageView imgStyle       = findViewById(R.id.imgStyleDetail);
-        TextView tvName          = findViewById(R.id.tvDetailName);
-        TextView tvDescription   = findViewById(R.id.tvDetailDescription);
-        TextView tvMaintenance   = findViewById(R.id.tvDetailMaintenance);
-        TextView tvTips          = findViewById(R.id.tvDetailTips);
-        TextView tvTrend         = findViewById(R.id.tvDetailTrend);
-        TextView tvSuitableFor   = findViewById(R.id.tvSuitableFor);
 
         ImageButton btnSave = findViewById(R.id.btnSaveDetail);
         ImageButton btnBack = findViewById(R.id.btnBack);
 
-        // Load image
         Glide.with(this)
                 .load(h.getImageRes())
                 .centerCrop()
                 .into(imgStyle);
 
-        // Set text
         tvName.setText(h.getName());
         tvDesc.setText(h.getDescription());
         tvTips.setText(h.getMaintenanceTips());
@@ -75,9 +60,9 @@ public class StyleDetailActivity extends AppCompatActivity {
         tvMaintLevel.setText(level + " Maintenance");
 
         if (h.getSuitableFaceShapes() != null && !h.getSuitableFaceShapes().isEmpty()) {
-            tvSuitable.setText(String.join(", ", h.getSuitableFaceShapes()));
+            tvSuitableFor.setText(String.join(", ", h.getSuitableFaceShapes()) + " faces");
         } else {
-            tvSuitable.setText("All face shapes");
+            tvSuitableFor.setText("All face shapes");
         }
 
         if (faceShape != null && confidence > 0) {
@@ -85,25 +70,8 @@ public class StyleDetailActivity extends AppCompatActivity {
         } else {
             tvMatchBadge.setText("Recommended style");
         }
-        String shapes = String.join(", ", h.getSuitableFaceShapes());
-        tvSuitableFor.setText("Best for: " + shapes);
 
-        // Back button logic
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-
-        // --- FIXED: MOVE THIS SECTION INSIDE onCreate ---
-        findViewById(R.id.btnTryOn).setOnClickListener(v -> {
-            Intent intent = new Intent(this, TryOnActivity.class);
-            intent.putExtra("HAIRSTYLE_ID", id);
-            startActivity(intent);
-        });
-        // ------------------------------------------------
-        // Back
         btnBack.setOnClickListener(v -> finish());
-
-        // Save toggle
-        isSaved = SavedStylesManager.isSaved(this, h.getId());
-        updateSaveIcon(btnSave);
 
         btnSave.setOnClickListener(v -> {
             isSaved = !isSaved;
@@ -119,13 +87,13 @@ public class StyleDetailActivity extends AppCompatActivity {
             updateSaveIcon(btnSave);
         });
 
-        // Share buttons
         findViewById(R.id.btnShareDetail).setOnClickListener(v -> shareStyle(h, faceShape));
         findViewById(R.id.btnShareStyle).setOnClickListener(v -> shareStyle(h, faceShape));
 
-        // TRY IN AR (UPDATED)
         findViewById(R.id.btnTryAR).setOnClickListener(v -> {
-            Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, TryOnActivity.class);
+            intent.putExtra("HAIRSTYLE_ID", hairstyleId);
+            startActivity(intent);
         });
     }
 
@@ -139,7 +107,7 @@ public class StyleDetailActivity extends AppCompatActivity {
         String text =
                 "Check out the " + h.getName() + " hairstyle — perfect for " +
                         (faceShape != null ? faceShape + " faces" : "everyone") +
-                        " ✂ BarberBuddy";
+                        " via BarberBuddy";
 
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
