@@ -126,4 +126,18 @@ public class FaceAnalyzer implements ImageAnalysis.Analyzer {
             return null;
         }
     }
+
+    public void analyzeBitmap(android.graphics.Bitmap bitmap) {
+        // MediaPipe Image can be created directly from a Bitmap
+        com.google.mediapipe.framework.image.BitmapImageBuilder builder =
+                new com.google.mediapipe.framework.image.BitmapImageBuilder(bitmap);
+        com.google.mediapipe.framework.image.MPImage mpImage = builder.build();
+
+        // Use the same detector instance you already have
+        if (faceLandmarker != null) {
+            faceLandmarker.detectAsync(mpImage, System.currentTimeMillis());
+            // The results will come back through the existing resultListener
+            // and trigger the onFaceShapeDetected callback in MainActivity.
+        }
+    }
 }

@@ -128,25 +128,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvAnalysisLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Face Shape Analysis"
-            android:textColor="#333333"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/descWrapper" />
-
-        <LinearLayout
-            android:id="@+id/scoresContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/tvAnalysisLabel" />
-
-        <TextView
             android:id="@+id/tvRecLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -155,7 +136,7 @@
             android:textColor="#333333"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scoresContainer" />
+            app:layout_constraintTop_toBottomOf="@id/descWrapper" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerStyles"

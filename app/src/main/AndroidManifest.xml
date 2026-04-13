@@ -24,6 +24,7 @@
         <activity android:name=".MainActivity" android:exported="false"/>
         <activity android:name=".ResultsActivity" android:exported="false"/>
         <activity android:name=".StyleDetailActivity" android:exported="false"/>
+        <activity android:name=".RecommendationsActivity" android:exported="false"/>
 
     </application>
 </manifest>

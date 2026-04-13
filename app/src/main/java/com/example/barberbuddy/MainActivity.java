@@ -44,6 +44,39 @@ public class MainActivity extends AppCompatActivity {
     private String currentFaceShape = "";
     private FaceShapeAnalyzer.FaceShapeResult lastResult;
 
+    private void handleGalleryImage(Uri uri) {
+        try {
+            // 1. Convert URI to Bitmap
+            android.graphics.Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+
+            // 2. Create a one-time analyzer instance for the static image
+            FaceAnalyzer imageAnalyzer = new FaceAnalyzer(this, new FaceAnalyzer.FaceShapeListener() {
+                @Override
+                public void onFaceShapeDetected(FaceShapeAnalyzer.FaceShapeResult result,
+                                                List<NormalizedLandmark> landmarks,
+                                                int width, int height) {
+                    runOnUiThread(() -> {
+                        lastResult = result;
+                        currentFaceShape = result.primaryShape;
+                        navigateToResults(); // Automatically jump to results once detected
+                    });
+                }
+
+                @Override
+                public void onNoFaceDetected() {
+                    runOnUiThread(() -> Toast.makeText(MainActivity.this,
+                            "No face detected in photo. Please try another.", Toast.LENGTH_LONG).show());
+                }
+            });
+
+            // 3. Process the bitmap (FaceAnalyzer needs to be updated to accept Bitmaps)
+            imageAnalyzer.analyzeBitmap(bitmap);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     // Gallery Launcher
     private final ActivityResultLauncher<String> galleryLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
@@ -103,12 +136,6 @@ public class MainActivity extends AppCompatActivity {
         }
         intent.putExtra("FUZZY_SCORES", scoreMap);
         startActivity(intent);
-    }
-
-    private void handleGalleryImage(Uri uri) {
-        // Logic to process an uploaded photo would go here.
-        // For now, we can just show a toast.
-        Toast.makeText(this, "Image selected! Processing...", Toast.LENGTH_SHORT).show();
     }
 
     // --- CAMERA LOGIC (Same as before, just updating UI hooks) ---

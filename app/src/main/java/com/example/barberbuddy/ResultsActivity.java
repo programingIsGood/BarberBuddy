@@ -1,6 +1,8 @@
 package com.example.barberbuddy;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,7 +55,6 @@ public class ResultsActivity extends AppCompatActivity {
         TextView tvFaceShape = findViewById(R.id.tvFaceShapeResult);
         TextView tvFaceDesc  = findViewById(R.id.tvFaceShapeDesc);
         RecyclerView recycler = findViewById(R.id.recyclerStyles);
-        LinearLayout scoresContainer = findViewById(R.id.scoresContainer);
 
         // 3. Set Header Text (Face Shape + Confidence)
         // If secondary exists, we show a "Dual" result title
@@ -73,7 +74,7 @@ public class ResultsActivity extends AppCompatActivity {
         }
 
         // 5. Build the Dynamic Score Bars
-        buildScoreBars(scoresContainer, fuzzyScores);
+
 
         // 6. Populate Hairstyles: Merge recommendations from both shapes
         List<Hairstyle> recommended = HairstyleRepository.getForFaceShape(faceShape);
@@ -96,55 +97,21 @@ public class ResultsActivity extends AppCompatActivity {
 
         recycler.setLayoutManager(new GridLayoutManager(this, 2));
         recycler.setAdapter(adapter);
+
+        // Inside onCreate in ResultsActivity.java ...
+
+        Button btnBrowse = findViewById(R.id.btnBrowse);
+        String finalFaceShape = faceShape;
+        btnBrowse.setOnClickListener(v -> {
+            Intent intent = new Intent(ResultsActivity.this, RecommendationsActivity.class);
+            // Pass the shapes forward so the next screen knows what to show
+            intent.putExtra("FACE_SHAPE", finalFaceShape);
+            intent.putExtra("SECONDARY_SHAPE", secondary);
+            startActivity(intent);
+        });
+
+        Button btnRetry = findViewById(R.id.btnRetry);
+        btnRetry.setOnClickListener(v -> finish()); // Go back to camera
     }
 
-    private void buildScoreBars(LinearLayout container,
-                                Map<String, Integer> scores) {
-        String[] order = {"Oval","Round","Square","Heart","Oblong","Diamond","Triangle"};
-        container.removeAllViews();
-
-        for (String shape : order) {
-            int score = scores.containsKey(shape) ? scores.get(shape) : 0;
-            if (score == 0) continue;
-
-            // Row: label + bar + percentage
-            LinearLayout row = new LinearLayout(this);
-            row.setOrientation(LinearLayout.HORIZONTAL);
-            row.setPadding(0, 6, 0, 6);
-
-            TextView label = new TextView(this);
-            label.setText(shape);
-            label.setTextColor(0xFF333333);
-            label.setTextSize(13f);
-            LinearLayout.LayoutParams labelParams =
-                    new LinearLayout.LayoutParams(220, LinearLayout.LayoutParams.WRAP_CONTENT);
-            label.setLayoutParams(labelParams);
-            row.addView(label);
-
-            ProgressBar bar = new ProgressBar(this, null,
-                    android.R.attr.progressBarStyleHorizontal);
-            bar.setMax(100);
-            bar.setProgress(score);
-            bar.setProgressTintList(android.content.res.ColorStateList.valueOf(0xFF2D4635));
-
-            LinearLayout.LayoutParams barParams =
-                    new LinearLayout.LayoutParams(0, 36, 1f);
-            barParams.gravity = android.view.Gravity.CENTER_VERTICAL;
-            bar.setLayoutParams(barParams);
-            row.addView(bar);
-
-            TextView pct = new TextView(this);
-            pct.setText(score + "%");
-            pct.setTextColor(0xFF333333);
-            pct.setTextSize(13f);
-            pct.setPadding(12, 0, 0, 0);
-            LinearLayout.LayoutParams pctParams =
-                    new LinearLayout.LayoutParams(100, LinearLayout.LayoutParams.WRAP_CONTENT);
-            pctParams.gravity = android.view.Gravity.CENTER_VERTICAL;
-            pct.setLayoutParams(pctParams);
-            row.addView(pct);
-
-            container.addView(row);
-        }
-    }
 }

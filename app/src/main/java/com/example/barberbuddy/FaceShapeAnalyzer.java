@@ -86,6 +86,7 @@ public class FaceShapeAnalyzer {
         }
     }
 
+
     public static class ShapeMembership {
         public final String shape;
         public final float membership;   // 0.0 – 1.0
