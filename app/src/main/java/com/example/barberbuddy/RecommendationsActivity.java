@@ -2,7 +2,6 @@ package com.example.barberbuddy;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,15 +14,16 @@ public class RecommendationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommendations);
 
+        // 1. Get the detected shapes from the previous screen
         String faceShape = getIntent().getStringExtra("FACE_SHAPE");
         String secondary = getIntent().getStringExtra("SECONDARY_SHAPE");
 
         RecyclerView recyclerView = findViewById(R.id.recyclerAllRecommendations);
 
-        // 1. Get recommendations for primary shape
+        // 2. Fetch recommendations from the Repository
         List<Hairstyle> recommended = HairstyleRepository.getForFaceShape(faceShape);
 
-        // 2. If there's a secondary shape, merge those styles too
+        // If there's a secondary shape, merge those styles too
         if (secondary != null && !secondary.isEmpty()) {
             List<Hairstyle> secondaryStyles = HairstyleRepository.getForFaceShape(secondary);
             for (Hairstyle s : secondaryStyles) {
@@ -33,8 +33,9 @@ public class RecommendationsActivity extends AppCompatActivity {
             }
         }
 
-        // 3. Setup the Adapter
+        // 3. Setup the Click Listener: This is the "Clickable Card" logic
         HairstyleAdapter adapter = new HairstyleAdapter(recommended, hairstyle -> {
+            // When a card is clicked, we pass the specific Hairstyle ID to the detail activity
             Intent intent = new Intent(this, StyleDetailActivity.class);
             intent.putExtra("HAIRSTYLE_ID", hairstyle.getId());
             startActivity(intent);
