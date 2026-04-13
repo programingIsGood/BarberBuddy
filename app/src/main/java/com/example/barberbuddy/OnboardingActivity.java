@@ -54,7 +54,7 @@ public class OnboardingActivity extends AppCompatActivity {
         tvSkip.setOnClickListener(v -> {
             SharedPreferences prefs = getSharedPreferences("barberbuddy_prefs", MODE_PRIVATE);
             prefs.edit().putBoolean("onboarded", true).apply();
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, RecommendationsActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
         });
