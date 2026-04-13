@@ -31,39 +31,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvScanTitle" />
 
-    <androidx.camera.view.PreviewView
-        android:id="@+id/previewView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/previewCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="160dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:cardPreventCornerOverlap="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvFaceShape">
 
-        <com.example.barberbuddy.LandmarkOverlayView
-            android:id="@+id/overlayView"
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvInstruction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:background="@android:drawable/editbox_dropdown_dark_frame"
-            android:backgroundTint="#CC000000"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="8dp"
-            android:text="Centre your face in the oval"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
+            <com.example.barberbuddy.LandmarkOverlayView
+                android:id="@+id/overlayView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    </androidx.camera.view.PreviewView>
+            <TextView
+                android:id="@+id/tvInstruction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:background="@android:drawable/editbox_dropdown_dark_frame"
+                android:backgroundTint="#CC000000"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="8dp"
+                android:text="Centre your face in the oval"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
 
+        </androidx.camera.view.PreviewView>
+    </androidx.cardview.widget.CardView>
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
