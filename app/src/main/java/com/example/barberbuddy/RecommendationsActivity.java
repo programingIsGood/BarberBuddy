@@ -83,7 +83,7 @@ public class RecommendationsActivity extends AppCompatActivity {
             }
 
             if (id == R.id.nav_profile) {
-                Intent intent = new Intent(this, ResultsActivity.class);
+                Intent intent = new Intent(this, ProfileActivity.class);
                 intent.putExtra("FACE_SHAPE", faceShape);
                 intent.putExtra("SECONDARY_SHAPE", secondary);
                 startActivity(intent);

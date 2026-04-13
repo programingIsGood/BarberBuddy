@@ -28,6 +28,8 @@
         <activity android:name=".ResultsActivity" android:exported="false"/>
         <activity android:name=".StyleDetailActivity" android:exported="false"/>
         <activity android:name=".RecommendationsActivity" android:exported="false"/>
+        <activity android:name=".ProfileActivity" android:exported="false"/>
+        <activity android:name=".ARPreviewActivity" android:exported="false"/>
 
     </application>
 </manifest>
