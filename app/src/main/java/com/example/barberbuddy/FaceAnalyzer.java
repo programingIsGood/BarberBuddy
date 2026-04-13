@@ -45,7 +45,7 @@ public class FaceAnalyzer implements ImageAnalysis.Analyzer {
 
         FaceLandmarkerOptions options = FaceLandmarkerOptions.builder()
                 .setBaseOptions(BaseOptions.builder()
-                        .setModelAssetPath("face_landmarker.task")
+                        .setModelAssetPath("models/face_landmarker.task")
                         .build())
                 .setRunningMode(RunningMode.LIVE_STREAM)
                 .setNumFaces(1)

@@ -9,6 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <!-- Place this inside the vertical LinearLayout in activity_style_detail.xml, after the tips -->
+
+        <Button
+            android:id="@+id/btnTryOn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#2D4635"
+            android:text="Try On This Style"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

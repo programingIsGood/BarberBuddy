@@ -1,5 +1,6 @@
 package com.example.barberbuddy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ public class StyleDetailActivity extends AppCompatActivity {
         // Safety check: if no hairstyle found, go back
         if (h == null) { finish(); return; }
 
-        // 3. Update the UI with the hairstyle's unique information
+        // 3. Update the UI
         ImageView imgStyle       = findViewById(R.id.imgStyleDetail);
         TextView tvName          = findViewById(R.id.tvDetailName);
         TextView tvDescription   = findViewById(R.id.tvDetailDescription);
@@ -31,21 +32,26 @@ public class StyleDetailActivity extends AppCompatActivity {
         TextView tvTrend         = findViewById(R.id.tvDetailTrend);
         TextView tvSuitableFor   = findViewById(R.id.tvSuitableFor);
 
-        // Load the specific image
         Glide.with(this).load(h.getImageRes()).centerCrop().into(imgStyle);
 
-        // Update the text fields
         tvName.setText(h.getName());
         tvDescription.setText(h.getDescription());
         tvMaintenance.setText("Maintenance Level: " + h.getMaintenanceLevel());
         tvTips.setText(h.getMaintenanceTips());
         tvTrend.setText(h.getTrend());
 
-        // Join the list of suitable shapes into a single string
         String shapes = String.join(", ", h.getSuitableFaceShapes());
         tvSuitableFor.setText("Best for: " + shapes);
 
-        // Optional: Back button logic
+        // Back button logic
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+
+        // --- FIXED: MOVE THIS SECTION INSIDE onCreate ---
+        findViewById(R.id.btnTryOn).setOnClickListener(v -> {
+            Intent intent = new Intent(this, TryOnActivity.class);
+            intent.putExtra("HAIRSTYLE_ID", id);
+            startActivity(intent);
+        });
+        // ------------------------------------------------
     }
 }

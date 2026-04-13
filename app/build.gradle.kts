@@ -19,13 +19,13 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     // Required for MediaPipe — prevents .task file from being compressed
     androidResources {
-        noCompress += "task"
+        noCompress += listOf("task", "tflite")
     }
 }
 
@@ -49,6 +49,10 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // ... inside dependencies ...
+// SceneView for ARCore (3D Rendering)
+    implementation("com.gorisse.thomas.sceneform:sceneform:1.23.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
