@@ -138,20 +138,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/descWrapper" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerStyles"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/tvRecLabel" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/recyclerStyles">
+            android:orientation="horizontal" app:layout_constraintTop_toBottomOf="@id/tvRecLabel">
 
             <Button
                 android:id="@+id/btnBrowse"
