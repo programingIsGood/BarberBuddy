@@ -14,9 +14,9 @@
         android:text="Face Scan"
         android:textColor="#333333"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/tvFaceShape"
@@ -27,10 +27,11 @@
         android:textColor="#2D4635"
         android:textSize="16sp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvScanTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvScanTitle" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- CAMERA PREVIEW AREA -->
     <androidx.cardview.widget.CardView
         android:id="@+id/previewCard"
         android:layout_width="0dp"
@@ -40,22 +41,37 @@
         android:layout_marginBottom="160dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="0dp"
-        app:cardPreventCornerOverlap="false"
+        app:layout_constraintTop_toBottomOf="@id/tvFaceShape"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvFaceShape">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.camera.view.PreviewView
-            android:id="@+id/previewView"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!-- CAMERA PREVIEW -->
+            <androidx.camera.view.PreviewView
+                android:id="@+id/previewView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- OVAL CENTERED OVERLAY -->
+            <ImageView
+                android:id="@+id/ivScanFrame"
+                android:layout_width="220dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_scan_oval"
+                android:scaleType="fitCenter" />
+
+            <!-- LANDMARK OVERLAY -->
             <com.example.barberbuddy.LandmarkOverlayView
                 android:id="@+id/overlayView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+            <!-- INSTRUCTION TEXT -->
             <TextView
                 android:id="@+id/tvInstruction"
                 android:layout_width="wrap_content"
@@ -70,8 +86,11 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
-        </androidx.camera.view.PreviewView>
+        </FrameLayout>
+
     </androidx.cardview.widget.CardView>
+
+    <!-- BOTTOM ACTIONS -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -79,8 +98,8 @@
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
             android:id="@+id/btnCapture"
@@ -88,13 +107,11 @@
             android:layout_height="80dp"
             android:background="@android:drawable/presence_invisible"
             android:backgroundTint="#FFFFFF">
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:drawable/presence_invisible"
                 android:backgroundTint="#2D4635" />
-
             <View
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -108,8 +125,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="24dp"
-            android:background="@android:drawable/presence_invisible"
-            android:backgroundTint="#F2EFE9"
+            android:background="#F2EFE9"
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
