@@ -1,0 +1,134 @@
+[
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\layout_activity_style_detail.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\layout\\activity_style_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\layout_activity_results.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\layout\\activity_results.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-anydpi_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-anydpi\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.barberbuddy.app-merged_res-38:/layout_activity_main.xml.flat",
+        "source": "com.example.barberbuddy.app-main-40:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_side_part.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_side_part.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-hdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_quiff.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_quiff.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_textured_crop.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_textured_crop.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_bg_search_rounded.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\bg_search_rounded.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-mdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-hdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-xhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\layout_item_hairstyle.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\layout\\item_hairstyle.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-xxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-xhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-xxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_pompadour.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_pompadour.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_buzz_cut.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_buzz_cut.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_bg_chip_active.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\bg_chip_active.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_bg_chip_inactive.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\bg_chip_inactive.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_caesar.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_caesar.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-mdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\mipmap-anydpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\mipmap-anydpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\layout_activity_splash.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_slick_back.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_slick_back.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\drawable_style_undercut.png.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\drawable\\style_undercut.png"
+    },
+    {
+        "merged": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-merged_res-38:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\PC\\.gradle\\daemon\\8.13\\com.example.barberbuddy.app-main-40:\\layout\\activity_main.xml"
+    }
+]

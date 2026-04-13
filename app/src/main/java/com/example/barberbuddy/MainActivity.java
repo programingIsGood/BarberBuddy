@@ -3,13 +3,15 @@ package com.example.barberbuddy;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,7 +29,6 @@ import com.google.mediapipe.tasks.components.containers.NormalizedLandmark;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,58 +38,27 @@ public class MainActivity extends AppCompatActivity {
     private LandmarkOverlayView overlayView;
     private TextView tvFaceShape;
     private TextView tvInstruction;
-    private FrameLayout btnCapture;      // Changed from Button to FrameLayout
-    private ImageView ivUploadAction;   // New Upload text
+    private FrameLayout btnCapture;
+    private ImageView ivUploadAction;
 
     private ExecutorService cameraExecutor;
     private String currentFaceShape = "";
     private FaceShapeAnalyzer.FaceShapeResult lastResult;
 
-    private void handleGalleryImage(Uri uri) {
-        try {
-            // 1. Convert URI to Bitmap
-            android.graphics.Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+    private long lastUpdateMs = 0;
+    private static final long UPDATE_INTERVAL_MS = 300;
 
-            // 2. Create a one-time analyzer instance for the static image
-            FaceAnalyzer imageAnalyzer = new FaceAnalyzer(this, new FaceAnalyzer.FaceShapeListener() {
-                @Override
-                public void onFaceShapeDetected(FaceShapeAnalyzer.FaceShapeResult result,
-                                                List<NormalizedLandmark> landmarks,
-                                                int width, int height) {
-                    runOnUiThread(() -> {
-                        lastResult = result;
-                        currentFaceShape = result.primaryShape;
-                        navigateToResults(); // Automatically jump to results once detected
-                    });
-                }
-
-                @Override
-                public void onNoFaceDetected() {
-                    runOnUiThread(() -> Toast.makeText(MainActivity.this,
-                            "No face detected in photo. Please try another.", Toast.LENGTH_LONG).show());
-                }
+    // Camera permission
+    private final ActivityResultLauncher<String> cameraPermLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                if (granted) startCamera();
+                else showPermissionDenied();
             });
 
-            // 3. Process the bitmap (FaceAnalyzer needs to be updated to accept Bitmaps)
-            imageAnalyzer.analyzeBitmap(bitmap);
-
-        } catch (Exception e) {
-            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // Gallery Launcher
+    // Gallery
     private final ActivityResultLauncher<String> galleryLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-                if (uri != null) {
-                    handleGalleryImage(uri);
-                }
-            });
-
-    private final ActivityResultLauncher<String> cameraPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) startCamera();
-                else handlePermissionDenied();
+                if (uri != null) processPhoto(uri);
             });
 
     @Override
@@ -96,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 1. Initialize with new IDs from the matched XML
         previewView    = findViewById(R.id.previewView);
         overlayView    = findViewById(R.id.overlayView);
         tvFaceShape    = findViewById(R.id.tvFaceShape);
@@ -107,16 +76,16 @@ public class MainActivity extends AppCompatActivity {
         previewView.setScaleType(PreviewView.ScaleType.FILL_CENTER);
         cameraExecutor = Executors.newSingleThreadExecutor();
 
-        // 2. Navigation Logic (Triggered by the circular shutter button)
+        // Capture button → go to results
         btnCapture.setOnClickListener(v -> {
-            if (!currentFaceShape.isEmpty() && lastResult != null) {
-                navigateToResults();
-            } else {
-                Toast.makeText(this, "Please position your face in the oval", Toast.LENGTH_SHORT).show();
+            if (lastResult == null) {
+                Toast.makeText(this, "No face detected", Toast.LENGTH_SHORT).show();
+                return;
             }
+            navigateToResults();
         });
 
-        // 3. Upload Logic
+        // Upload image
         ivUploadAction.setOnClickListener(v -> {
             galleryLauncher.launch("image/*");
         });
@@ -124,86 +93,162 @@ public class MainActivity extends AppCompatActivity {
         checkCameraPermission();
     }
 
-    private void navigateToResults() {
-        Intent intent = new Intent(this, ResultsActivity.class);
-        intent.putExtra("FACE_SHAPE",      currentFaceShape);
-        intent.putExtra("CONFIDENCE",      lastResult.confidence);
-        intent.putExtra("SECONDARY_SHAPE", lastResult.getSecondaryShape());
-
-        HashMap<String, Integer> scoreMap = new HashMap<>();
-        for (FaceShapeAnalyzer.ShapeMembership sm : lastResult.allMemberships) {
-            scoreMap.put(sm.shape, Math.round(sm.membership * 100));
-        }
-        intent.putExtra("FUZZY_SCORES", scoreMap);
-        startActivity(intent);
-    }
-
-    // --- CAMERA LOGIC (Same as before, just updating UI hooks) ---
-
+    // ─────────────────────────────
+    // CAMERA
+    // ─────────────────────────────
     private void startCamera() {
-        ListenableFuture<ProcessCameraProvider> future = ProcessCameraProvider.getInstance(this);
+        ListenableFuture<ProcessCameraProvider> future =
+                ProcessCameraProvider.getInstance(this);
+
         future.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = future.get();
+                ProcessCameraProvider provider = future.get();
+
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-                FaceAnalyzer faceAnalyzer = new FaceAnalyzer(this, new FaceAnalyzer.FaceShapeListener() {
-                    @Override
-                    public void onFaceShapeDetected(FaceShapeAnalyzer.FaceShapeResult result,
-                                                    List<NormalizedLandmark> landmarks,
-                                                    int imageWidth, int imageHeight) {
-                        runOnUiThread(() -> {
-                            lastResult = result;
-                            currentFaceShape = result.primaryShape;
+                FaceAnalyzer analyzer = new FaceAnalyzer(this,
+                        new FaceAnalyzer.FaceShapeListener() {
 
-                            // UI Updates to match the new floating style
-                            tvFaceShape.setVisibility(View.VISIBLE);
-                            tvFaceShape.setText("Detected: " + result.primaryShape);
-                            tvInstruction.setText("Looking good! Tap the button to see styles.");
+                            @Override
+                            public void onFaceShapeDetected(
+                                    FaceShapeAnalyzer.FaceShapeResult result,
+                                    List<NormalizedLandmark> landmarks,
+                                    int w, int h) {
 
-                            // Visual feedback: Make the shutter button more prominent
-                            btnCapture.setAlpha(1.0f);
-                            overlayView.updateLandmarks(landmarks, imageWidth, imageHeight, true);
+                                long now = System.currentTimeMillis();
+                                if (now - lastUpdateMs < UPDATE_INTERVAL_MS) return;
+                                lastUpdateMs = now;
+
+                                runOnUiThread(() -> {
+                                    lastResult = result;
+                                    currentFaceShape = result.primaryShape;
+
+                                    tvFaceShape.setVisibility(View.VISIBLE);
+                                    tvFaceShape.setText("Detected: " + result.primaryShape);
+
+                                    tvInstruction.setText("Tap the button to continue");
+
+                                    overlayView.updateLandmarks(landmarks, w, h, true);
+                                });
+                            }
+
+                            @Override
+                            public void onNoFaceDetected() {
+                                runOnUiThread(() -> {
+                                    lastResult = null;
+                                    currentFaceShape = "";
+
+                                    tvFaceShape.setVisibility(View.GONE);
+                                    tvInstruction.setText("Centre your face in the oval");
+
+                                    overlayView.clearLandmarks();
+                                });
+                            }
                         });
-                    }
 
-                    @Override
-                    public void onNoFaceDetected() {
-                        runOnUiThread(() -> {
-                            lastResult = null;
-                            currentFaceShape = "";
-                            tvFaceShape.setVisibility(View.GONE);
-                            tvInstruction.setText("Centre your face in the oval");
-                            btnCapture.setAlpha(0.5f); // Dim button if no face
-                            overlayView.clearLandmarks();
-                        });
-                    }
-                });
-
-                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+                ImageAnalysis analysis = new ImageAnalysis.Builder()
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .build();
-                imageAnalysis.setAnalyzer(cameraExecutor, faceAnalyzer);
 
-                cameraProvider.unbindAll();
-                cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_FRONT_CAMERA, preview, imageAnalysis);
+                analysis.setAnalyzer(cameraExecutor, analyzer);
 
-            } catch (Exception e) { e.printStackTrace(); }
+                provider.unbindAll();
+                provider.bindToLifecycle(
+                        this,
+                        CameraSelector.DEFAULT_FRONT_CAMERA,
+                        preview,
+                        analysis
+                );
+
+            } catch (Exception e) {
+                Toast.makeText(this, "Camera failed", Toast.LENGTH_SHORT).show();
+            }
         }, ContextCompat.getMainExecutor(this));
     }
 
-    // --- PERMISSION HELPERS ---
-    private void checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            startCamera();
-        } else {
-            cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+    // ─────────────────────────────
+    // GALLERY PROCESSING
+    // ─────────────────────────────
+    private void processPhoto(Uri uri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media
+                    .getBitmap(getContentResolver(), uri);
+
+            FaceAnalyzer analyzer = new FaceAnalyzer(this,
+                    new FaceAnalyzer.FaceShapeListener() {
+
+                        @Override
+                        public void onFaceShapeDetected(
+                                FaceShapeAnalyzer.FaceShapeResult result,
+                                List<NormalizedLandmark> landmarks,
+                                int w, int h) {
+
+                            runOnUiThread(() -> {
+                                lastResult = result;
+                                currentFaceShape = result.primaryShape;
+                                navigateToResults();
+                            });
+                        }
+
+                        @Override
+                        public void onNoFaceDetected() {
+                            runOnUiThread(() ->
+                                    Toast.makeText(MainActivity.this,
+                                            "No face detected in image",
+                                            Toast.LENGTH_LONG).show());
+                        }
+                    });
+
+            analyzer.analyzeBitmap(bitmap);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Image failed", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void handlePermissionDenied() {
-        Toast.makeText(this, "Camera permission required", Toast.LENGTH_LONG).show();
+    // ─────────────────────────────
+    // NAVIGATION
+    // ─────────────────────────────
+    private void navigateToResults() {
+        HashMap<String, Integer> scoreMap = new HashMap<>();
+
+        for (FaceShapeAnalyzer.ShapeMembership sm : lastResult.allMemberships) {
+            scoreMap.put(sm.shape, Math.round(sm.membership * 100));
+        }
+
+        Intent intent = new Intent(this, ResultsActivity.class);
+        intent.putExtra("FACE_SHAPE", currentFaceShape);
+        intent.putExtra("CONFIDENCE", lastResult.confidence);
+        intent.putExtra("SECONDARY_SHAPE", lastResult.getSecondaryShape());
+        intent.putExtra("FUZZY_SCORES", scoreMap);
+
+        startActivity(intent);
+    }
+
+    // ─────────────────────────────
+    // PERMISSION
+    // ─────────────────────────────
+    private void checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startCamera();
+        } else {
+            cameraPermLauncher.launch(Manifest.permission.CAMERA);
+        }
+    }
+
+    private void showPermissionDenied() {
+        new AlertDialog.Builder(this)
+                .setTitle("Permission needed")
+                .setMessage("Camera is required.")
+                .setPositiveButton("Settings", (d, w) -> {
+                    Intent i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    i.setData(Uri.fromParts("package", getPackageName(), null));
+                    startActivity(i);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     @Override

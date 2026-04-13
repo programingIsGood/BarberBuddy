@@ -1,3 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BarberBuddy</string>
+    <string name="tagline">Scan it. Match it. Rock it.</string>
+    <string name="get_started">Get Started →</string>
+    <string name="skip">Skip for now</string>
+    <string name="face_scan_title">Face Scan</string>
+    <string name="centre_face">Centre your face in the oval</string>
+    <string name="upload_photo">Upload a photo instead</string>
+    <string name="your_result">Your Result</string>
+    <string name="face_shape_detected">FACE SHAPE DETECTED</string>
+    <string name="browse_hairstyles">Browse Hairstyles</string>
+    <string name="retry">Retry</string>
+    <string name="your_matches">Your Matches</string>
+    <string name="search_hairstyles">Search hairstyles…</string>
+    <string name="try_in_ar">Try in AR →</string>
+    <string name="share">Share</string>
+    <string name="about_this_style">ABOUT THIS STYLE</string>
+    <string name="maintenance">MAINTENANCE</string>
+    <string name="suitable_for">SUITABLE FOR</string>
+    <string name="home">Home</string>
+    <string name="scan">Scan</string>
+    <string name="saved">Saved</string>
+    <string name="profile">Profile</string>
+    <string name="capture">Capture</string>
+    <string name="match_accuracy">Match accuracy</string>
+    <string name="styles_found">Styles found</string>
+    <string name="trending_now">Trending now</string>
+    <string name="find_perfect_cut">Find Your\nPerfect Cut</string>
+    <string name="onboarding_desc">Scan your face and get personalised hairstyle recommendations in seconds.</string>
+    <string name="good_morning">Good morning,</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_scan">Scan</string>
+    <string name="nav_saved">Saved</string>
+    <string name="nav_profile">Profile</string>
 </resources>

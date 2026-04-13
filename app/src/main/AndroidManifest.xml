@@ -10,11 +10,13 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="BarberBuddy"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BarberBuddy">
 
+        <activity
+            android:name=".SplashActivity"
         <!-- Update this tag with tools:replace -->
         <meta-data
             android:name="com.google.ar.core"
@@ -27,17 +29,22 @@
             android:configChanges="orientation|screenSize"/>
         <activity android:name=".SplashActivity"
             android:exported="true"
+            android:noHistory="true"
             android:theme="@style/Theme.BarberBuddy.Splash">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity android:name=".OnboardingActivity" android:exported="false"/>
         <activity android:name=".MainActivity" android:exported="false"/>
         <activity android:name=".ResultsActivity" android:exported="false"/>
         <activity android:name=".StyleDetailActivity" android:exported="false"/>
         <activity android:name=".RecommendationsActivity" android:exported="false"/>
+        <activity android:name=".ProfileActivity" android:exported="false"/>
+        <activity android:name=".ARPreviewActivity" android:exported="false"/>
 
     </application>
 </manifest>

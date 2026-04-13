@@ -2,40 +2,61 @@ package com.example.barberbuddy;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecommendationsActivity extends AppCompatActivity {
+
+    private List<Hairstyle> fullList = new ArrayList<>();
+    private HairstyleAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommendations);
 
-        // 1. Get the detected shapes from the previous screen
+        // INTENT DATA
         String faceShape = getIntent().getStringExtra("FACE_SHAPE");
         String secondary = getIntent().getStringExtra("SECONDARY_SHAPE");
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerAllRecommendations);
+        // VIEW
+        RecyclerView recyclerView = findViewById(R.id.recyclerStyles);
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
 
-        // 2. Fetch recommendations from the Repository
-        List<Hairstyle> recommended = HairstyleRepository.getForFaceShape(faceShape);
+        // BASE DATA
+        fullList = new ArrayList<>(HairstyleRepository.getForFaceShape(faceShape));
 
-        // If there's a secondary shape, merge those styles too
+        // MERGE SECONDARY SHAPE (NO DUPLICATES)
         if (secondary != null && !secondary.isEmpty()) {
-            List<Hairstyle> secondaryStyles = HairstyleRepository.getForFaceShape(secondary);
-            for (Hairstyle s : secondaryStyles) {
-                if (!recommended.contains(s)) {
-                    recommended.add(s);
+            List<Hairstyle> secondaryList =
+                    HairstyleRepository.getForFaceShape(secondary);
+
+            for (Hairstyle s : secondaryList) {
+                boolean exists = false;
+
+                for (Hairstyle h : fullList) {
+                    if (h.getId() == s.getId()) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists) {
+                    fullList.add(s);
                 }
             }
         }
 
-        // 3. Setup the Click Listener: This is the "Clickable Card" logic
-        HairstyleAdapter adapter = new HairstyleAdapter(recommended, hairstyle -> {
-            // When a card is clicked, we pass the specific Hairstyle ID to the detail activity
+        // ADAPTER
+        adapter = new HairstyleAdapter(fullList, hairstyle -> {
             Intent intent = new Intent(this, StyleDetailActivity.class);
             intent.putExtra("HAIRSTYLE_ID", hairstyle.getId());
             startActivity(intent);
@@ -43,5 +64,33 @@ public class RecommendationsActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
+
+        // BOTTOM NAVIGATION (MATCH XML IDs)
+        bottomNav.setOnItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            if (id == R.id.nav_scan) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            }
+
+            if (id == R.id.nav_saved) {
+                Toast.makeText(this, "Saved styles coming soon!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            if (id == R.id.nav_profile) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("FACE_SHAPE", faceShape);
+                intent.putExtra("SECONDARY_SHAPE", secondary);
+                startActivity(intent);
+                return true;
+            }
+
+            return false;
+        });
     }
 }
