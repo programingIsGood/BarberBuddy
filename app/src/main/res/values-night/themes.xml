@@ -1,7 +1,98 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.BarberBuddy" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.BarberBuddy" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/bb_dark_green</item>
+        <item name="colorPrimaryVariant">@color/bb_deep_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/bb_gold</item>
+        <item name="colorOnSecondary">@color/bb_text_dark</item>
+        <item name="colorSurface">@color/bb_surface</item>
+        <item name="android:colorBackground">@color/bb_surface</item>
+        <item name="android:windowBackground">@color/bb_dark_green</item>
+        <item name="android:statusBarColor">@color/bb_dark_green</item>
+        <item name="android:navigationBarColor">@color/bb_dark_green</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <style name="Theme.BarberBuddy.Splash" parent="Theme.BarberBuddy">
+        <item name="android:windowBackground">@color/bb_dark_green</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="Theme.BarberBuddy.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/bb_dark_green</item>
+        <item name="colorSecondary">@color/bb_gold</item>
+        <item name="android:colorBackground">@color/bb_surface</item>
+        <item name="android:statusBarColor">@color/bb_surface</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="BB.Button.Gold" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/bb_gold</item>
+        <item name="android:textColor">@color/bb_text_dark</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="cornerRadius">32dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <style name="BB.Button.Green" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/bb_deep_green</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="BB.Button.Outline" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/bb_gold</item>
+        <item name="android:textColor">@color/bb_gold</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <!-- Card Styles -->
+    <style name="BB.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="BB.Card.Dark" parent="BB.Card">
+        <item name="cardBackgroundColor">@color/bb_card_bg_dark</item>
+    </style>
+
+    <!-- Chip Styles -->
+    <style name="BB.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/bb_chip_bg</item>
+        <item name="android:textColor">@color/bb_chip_text</item>
+        <item name="chipCornerRadius">16dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Text Styles -->
+    <style name="BB.Text.Display" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+    </style>
+
+    <style name="BB.Text.Title" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/bb_text_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BB.Text.Label" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/bb_text_muted</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 </resources>

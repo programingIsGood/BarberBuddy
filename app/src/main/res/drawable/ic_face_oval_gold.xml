@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="200dp"
+    android:viewportWidth="160"
+    android:viewportHeight="200">
+    <!-- Dashed oval outline -->
+    <path
+        android:pathData="M80,12 C112,12 138,48 138,100 C138,152 112,188 80,188 C48,188 22,152 22,100 C22,48 48,12 80,12 Z"
+        android:strokeColor="#C9A84C"
+        android:strokeWidth="2"
+        android:fillColor="#15C9A84C"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <!-- Scan line effect -->
+    <path
+        android:pathData="M22,100 L138,100"
+        android:strokeColor="#C9A84C"
+        android:strokeWidth="0.6"
+        android:strokeAlpha="0.4"
+        android:fillColor="@android:color/transparent"/>
+    <!-- Horizontal measurements dots -->
+    <path
+        android:pathData="M80,40 L80,160"
+        android:strokeColor="#C9A84C"
+        android:strokeWidth="0.6"
+        android:strokeAlpha="0.4"
+        android:fillColor="@android:color/transparent"/>
+    <!-- Corner brackets -->
+    <path android:pathData="M22,72 L22,55 L39,55" android:strokeColor="#C9A84C" android:strokeWidth="2.5" android:fillColor="@android:color/transparent"/>
+    <path android:pathData="M138,72 L138,55 L121,55" android:strokeColor="#C9A84C" android:strokeWidth="2.5" android:fillColor="@android:color/transparent"/>
+    <path android:pathData="M22,128 L22,145 L39,145" android:strokeColor="#C9A84C" android:strokeWidth="2.5" android:fillColor="@android:color/transparent"/>
+    <path android:pathData="M138,128 L138,145 L121,145" android:strokeColor="#C9A84C" android:strokeWidth="2.5" android:fillColor="@android:color/transparent"/>
+</vector>
