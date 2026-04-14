@@ -2,6 +2,7 @@ package com.example.barberbuddy;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -76,19 +77,17 @@ public class MainActivity extends AppCompatActivity {
         previewView.setScaleType(PreviewView.ScaleType.FILL_CENTER);
         cameraExecutor = Executors.newSingleThreadExecutor();
 
-        // Capture button → go to results
         btnCapture.setOnClickListener(v -> {
-            if (lastResult == null) {
+            if (lastResult == null || currentFaceShape.isEmpty()) {
                 Toast.makeText(this, "No face detected", Toast.LENGTH_SHORT).show();
                 return;
             }
             navigateToResults();
         });
 
-        // Upload image
-        ivUploadAction.setOnClickListener(v -> {
-            galleryLauncher.launch("image/*");
-        });
+        ivUploadAction.setOnClickListener(v ->
+                galleryLauncher.launch("image/*")
+        );
 
         checkCameraPermission();
     }
@@ -168,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // ─────────────────────────────
-    // GALLERY PROCESSING
+    // GALLERY
     // ─────────────────────────────
     private void processPhoto(Uri uri) {
         try {
@@ -208,15 +207,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // ─────────────────────────────
-    // NAVIGATION
+    // NAVIGATION + SAVE SCAN
     // ─────────────────────────────
     private void navigateToResults() {
+        if (lastResult == null) return;
+
         HashMap<String, Integer> scoreMap = new HashMap<>();
 
         for (FaceShapeAnalyzer.ShapeMembership sm : lastResult.allMemberships) {
             scoreMap.put(sm.shape, Math.round(sm.membership * 100));
         }
 
+        // ✅ SAVE SCAN DATA
+        SharedPreferences prefs = getSharedPreferences("barberbuddy_prefs", MODE_PRIVATE);
+        int currentCount = prefs.getInt("scan_count", 0);
+
+        prefs.edit()
+                .putString("last_face_shape", currentFaceShape)
+                .putInt("last_confidence", lastResult.confidence)
+                .putInt("scan_count", currentCount + 1)
+                .apply();
+
+        // Navigate
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putExtra("FACE_SHAPE", currentFaceShape);
         intent.putExtra("CONFIDENCE", lastResult.confidence);

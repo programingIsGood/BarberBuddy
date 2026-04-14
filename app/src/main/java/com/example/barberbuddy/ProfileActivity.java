@@ -9,50 +9,61 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private SharedPreferences prefs;
+
+    private TextView tvFaceShape, tvConfidence, tvScanCount, tvSavedCount;
+    private MaterialButton btnScan, btnReset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        SharedPreferences prefs = getSharedPreferences("barberbuddy_prefs", MODE_PRIVATE);
+        prefs = getSharedPreferences("barberbuddy_prefs", MODE_PRIVATE);
 
-        // 1. Load Data
-        String lastShape   = prefs.getString("last_face_shape", "Not scanned yet");
-        int    lastConf    = prefs.getInt("last_confidence", 0);
-        int    scanCount   = prefs.getInt("scan_count", 0);
+        // Views
+        tvFaceShape  = findViewById(R.id.tvProfileFaceShape);
+        tvConfidence = findViewById(R.id.tvProfileConfidence);
+        tvScanCount  = findViewById(R.id.tvScanCount);
+        tvSavedCount = findViewById(R.id.tvSavedCount);
 
-        // Ensure SavedStylesManager is implemented to return a List
-        int    savedCount  = SavedStylesManager.getSavedStyles(this).size();
+        btnScan  = findViewById(R.id.btnProfileScan);
+        btnReset = findViewById(R.id.btnResetProfile);
 
-        // 2. Initialize Views
-        TextView tvFaceShape   = findViewById(R.id.tvProfileFaceShape);
-        TextView tvConfidence  = findViewById(R.id.tvProfileConfidence);
-        TextView tvScanCount   = findViewById(R.id.tvScanCount);
-        TextView tvSavedCount  = findViewById(R.id.tvSavedCount);
-        MaterialButton btnScan = findViewById(R.id.btnProfileScan);
-        MaterialButton btnReset= findViewById(R.id.btnResetProfile);
+        setupClicks();
+        setupBottomNav();
+    }
 
-        // Optional: Make the saved stat card clickable
-        // Note: You may need to add this ID to your XML CardView for the saved stat
-        MaterialCardView cardSaved = (MaterialCardView) tvSavedCount.getParent().getParent();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
 
-        // 3. Set Text
+    private void loadData() {
+        String lastShape = prefs.getString("last_face_shape", "Not scanned yet");
+        int lastConf     = prefs.getInt("last_confidence", 0);
+        int scanCount    = prefs.getInt("scan_count", 0);
+        int savedCount   = SavedStylesManager.getSavedStyles(this).size();
+
         tvFaceShape.setText(lastShape);
         tvConfidence.setText(lastConf > 0 ? lastConf + "% match" : "—");
         tvScanCount.setText(String.valueOf(scanCount));
         tvSavedCount.setText(String.valueOf(savedCount));
+    }
 
-        // 4. Click Listeners
+    private void setupClicks() {
+
         btnScan.setOnClickListener(v ->
-                startActivity(new Intent(this, MainActivity.class)));
+                startActivity(new Intent(this, MainActivity.class))
+        );
 
-        cardSaved.setOnClickListener(v -> {
-            startActivity(new Intent(this, SavedStylesActivity.class));
-        });
+        tvSavedCount.setOnClickListener(v ->
+                startActivity(new Intent(this, SavedStylesActivity.class))
+        );
 
         btnReset.setOnClickListener(v -> {
             prefs.edit()
@@ -61,37 +72,37 @@ public class ProfileActivity extends AppCompatActivity {
                     .remove("scan_count")
                     .putBoolean("onboarded", false)
                     .apply();
+
             startActivity(new Intent(this, SplashActivity.class));
             finishAffinity();
         });
+    }
 
-        // 5. Bottom Navigation Logic
+    private void setupBottomNav() {
+
         BottomNavigationView nav = findViewById(R.id.bottomNav);
-        nav.getMenu().findItem(R.id.nav_profile).setChecked(true);
+        nav.setSelectedItemId(R.id.nav_profile);
 
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_home) {
-                // If you have a specific face shape stored, you'd pass it here
-                Intent intent = new Intent(this, RecommendationsActivity.class);
-                intent.putExtra("FACE_SHAPE", lastShape);
-                startActivity(intent);
+                startActivity(new Intent(this, RecommendationsActivity.class));
                 finish();
                 return true;
+
             } else if (id == R.id.nav_scan) {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
                 return true;
+
             } else if (id == R.id.nav_saved) {
-                // FIX: Navigate to SavedStylesActivity
                 startActivity(new Intent(this, SavedStylesActivity.class));
                 finish();
                 return true;
-            } else if (id == R.id.nav_profile) {
-                return true; // Already here
             }
-            return false;
+
+            return id == R.id.nav_profile;
         });
     }
 }

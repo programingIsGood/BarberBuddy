@@ -71,6 +71,10 @@ public class StyleDetailActivity extends AppCompatActivity {
             tvMatchBadge.setText("Recommended style");
         }
 
+        // ── FIX: load real saved state so the icon is always correct ──
+        isSaved = SavedStylesManager.isSaved(this, h.getId());
+        updateSaveIcon(btnSave);
+
         btnBack.setOnClickListener(v -> finish());
 
         btnSave.setOnClickListener(v -> {

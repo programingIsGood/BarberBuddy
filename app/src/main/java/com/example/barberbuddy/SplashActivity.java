@@ -7,6 +7,8 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -21,10 +23,19 @@ public class SplashActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
 
             Intent next;
-            if (onboarded) {
+            if (!onboarded) {
+                // First launch: show onboarding
                 next = new Intent(this, OnboardingActivity.class);
             } else {
-                next = new Intent(this, MainActivity.class);
+                // Returning user: check if they have saved styles
+                List<Hairstyle> savedStyles = SavedStylesManager.getSavedStyles(this);
+                if (!savedStyles.isEmpty()) {
+                    // Has saves → go straight to Recommendations
+                    next = new Intent(this, RecommendationsActivity.class);
+                } else {
+                    // No saves → go to scan screen
+                    next = new Intent(this, MainActivity.class);
+                }
             }
 
             startActivity(next);
