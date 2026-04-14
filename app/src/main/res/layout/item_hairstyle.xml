@@ -51,14 +51,15 @@
                 android:paddingBottom="4dp"/>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Saved/Bookmark button (top-left) -->
-        <ImageButton
-            android:id="@+id/btnSave"
+        <!-- SAVE ICON (UPDATED: ImageView instead of ImageButton) -->
+        <ImageView
+            android:id="@+id/ivSave"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_bookmark_outline"
+            android:padding="6dp"
             android:background="@drawable/bg_icon_btn_white"
             android:contentDescription="Save style"
             app:layout_constraintTop_toTopOf="parent"

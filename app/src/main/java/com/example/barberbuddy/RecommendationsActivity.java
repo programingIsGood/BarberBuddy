@@ -2,14 +2,10 @@ package com.example.barberbuddy;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,39 +19,30 @@ public class RecommendationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommendations);
 
-        // INTENT DATA
+        // 1. GET INTENT DATA
         String faceShape = getIntent().getStringExtra("FACE_SHAPE");
         String secondary = getIntent().getStringExtra("SECONDARY_SHAPE");
 
-        // VIEW
+        // 2. INITIALIZE VIEWS
         RecyclerView recyclerView = findViewById(R.id.recyclerStyles);
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
 
-        // BASE DATA
-        fullList = new ArrayList<>(HairstyleRepository.getForFaceShape(faceShape));
+        // 3. FETCH BASE DATA
+        if (faceShape != null) {
+            fullList.addAll(HairstyleRepository.getForFaceShape(faceShape));
+        }
 
-        // MERGE SECONDARY SHAPE (NO DUPLICATES)
+        // 4. MERGE SECONDARY SHAPE (Avoiding Duplicates)
         if (secondary != null && !secondary.isEmpty()) {
-            List<Hairstyle> secondaryList =
-                    HairstyleRepository.getForFaceShape(secondary);
-
+            List<Hairstyle> secondaryList = HairstyleRepository.getForFaceShape(secondary);
             for (Hairstyle s : secondaryList) {
-                boolean exists = false;
-
-                for (Hairstyle h : fullList) {
-                    if (h.getId() == s.getId()) {
-                        exists = true;
-                        break;
-                    }
-                }
-
-                if (!exists) {
+                if (!listContainsId(fullList, s.getId())) {
                     fullList.add(s);
                 }
             }
         }
 
-        // ADAPTER
+        // 5. SET UP ADAPTER
         adapter = new HairstyleAdapter(fullList, hairstyle -> {
             Intent intent = new Intent(this, StyleDetailActivity.class);
             intent.putExtra("HAIRSTYLE_ID", hairstyle.getId());
@@ -65,9 +52,8 @@ public class RecommendationsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
 
-        // BOTTOM NAVIGATION (MATCH XML IDs)
+        // 6. FIX BOTTOM NAVIGATION
         bottomNav.setOnItemSelectedListener(item -> {
-
             int id = item.getItemId();
 
             if (id == R.id.nav_scan) {
@@ -78,7 +64,8 @@ public class RecommendationsActivity extends AppCompatActivity {
             }
 
             if (id == R.id.nav_saved) {
-                Toast.makeText(this, "Saved styles coming soon!", Toast.LENGTH_SHORT).show();
+                // FIXED: Now opens the SavedStylesActivity instead of a Toast
+                startActivity(new Intent(this, SavedStylesActivity.class));
                 return true;
             }
 
@@ -92,5 +79,15 @@ public class RecommendationsActivity extends AppCompatActivity {
 
             return false;
         });
+    }
+
+    /**
+     * Helper to check if a hairstyle ID already exists in our list
+     */
+    private boolean listContainsId(List<Hairstyle> list, int id) {
+        for (Hairstyle h : list) {
+            if (h.getId() == id) return true;
+        }
+        return false;
     }
 }
