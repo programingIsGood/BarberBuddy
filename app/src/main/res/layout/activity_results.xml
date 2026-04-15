@@ -308,6 +308,7 @@
                         android:textColor="@color/white"
                         android:layout_marginBottom="16dp"/>
 
+
                     <LinearLayout
                         android:id="@+id/scoresContainer"
                         android:layout_width="match_parent"

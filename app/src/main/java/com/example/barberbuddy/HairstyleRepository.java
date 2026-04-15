@@ -42,7 +42,7 @@ public class HairstyleRepository {
                     "models/side_part.glb"),
 
             new Hairstyle(5, "Modern Quiff",
-                    R.drawable.style_quiff,
+                    R.drawable.quiff,
                     R.drawable.hair_quiff_overlay,
                     Arrays.asList("Oval", "Round", "Heart", "Triangle"),
                     "Swept-up front volume with tapered sides. Versatile and modern.",
@@ -71,7 +71,15 @@ public class HairstyleRepository {
                     Arrays.asList("Oval", "Oblong", "Heart", "Diamond"),
                     "All hair combed straight back. Sophisticated and confident.",
                     "Medium", "Apply pomade and comb straight back.", "Classic",
-                    "models/slick_back.glb")
+                    "models/slick_back.glb"),
+
+            new Hairstyle(9, "Bowl Cut",
+                      R.drawable.style_bowl_cut,
+                      R.drawable.hair_slick_overlay,
+                      Arrays.asList("Oval", "Round", "Heart", "Diamond"),
+                "All hair combed straight back. Sophisticated and confident.",
+                        "Low", "Trim Regularly", "Classic",
+                        "models/slick_back.glb")
     ));
 
     public static List<Hairstyle> getRecommendations(FaceShapeAnalyzer.FaceShapeResult result) {
