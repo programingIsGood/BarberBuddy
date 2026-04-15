@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -65,7 +64,7 @@ public class RecommendationsActivity extends AppCompatActivity {
     }
 
     // ─────────────────────────────
-    // LOAD DATA (CORE FIX)
+    // LOAD DATA (FIXED + MATCHES REPOSITORY)
     // ─────────────────────────────
     private void loadData() {
 
@@ -73,27 +72,53 @@ public class RecommendationsActivity extends AppCompatActivity {
 
         String faceShape = prefs.getString("last_face_shape", null);
         String secondary = prefs.getString("last_secondary_shape", null);
+        boolean asianContext = prefs.getBoolean("asian_context", false);
 
-        if (faceShape != null && !faceShape.isEmpty()) {
+        FaceShapeAnalyzer.FaceShapeResult result =
+                buildResultFromPrefs(faceShape, secondary);
 
-            fullList.addAll(HairstyleRepository.getForFaceShape(faceShape));
-
-            if (secondary != null && !secondary.isEmpty()) {
-                List<Hairstyle> secondaryList =
-                        HairstyleRepository.getForFaceShape(secondary);
-
-                for (Hairstyle s : secondaryList) {
-                    if (!listContainsId(fullList, s.getId())) {
-                        fullList.add(s);
-                    }
-                }
-            }
-
+        if (result != null) {
+            fullList.addAll(
+                    HairstyleRepository.getRecommendations(result, asianContext)
+            );
         } else {
             fullList.addAll(HairstyleRepository.getAll());
         }
 
         applyFilters();
+    }
+
+    // ─────────────────────────────
+    // BUILD FACE SHAPE RESULT
+    // ─────────────────────────────
+    private FaceShapeAnalyzer.FaceShapeResult buildResultFromPrefs(
+            String primary, String secondary) {
+
+        List<FaceShapeAnalyzer.ShapeMembership> memberships = new ArrayList<>();
+
+        if (primary != null && !primary.isEmpty()) {
+            memberships.add(
+                    new FaceShapeAnalyzer.ShapeMembership(primary, 1.0f)
+            );
+        }
+
+        if (secondary != null && !secondary.isEmpty()) {
+            memberships.add(
+                    new FaceShapeAnalyzer.ShapeMembership(secondary, 0.5f)
+            );
+        }
+
+        if (memberships.isEmpty()) return null;
+
+        String top = memberships.get(0).shape;
+
+        return new FaceShapeAnalyzer.FaceShapeResult(
+                top,
+                80,
+                memberships,
+                null,
+                ""
+        );
     }
 
     // ─────────────────────────────
@@ -103,6 +128,7 @@ public class RecommendationsActivity extends AppCompatActivity {
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
@@ -138,7 +164,7 @@ public class RecommendationsActivity extends AppCompatActivity {
     }
 
     // ─────────────────────────────
-    // APPLY FILTER LOGIC
+    // FILTER LOGIC
     // ─────────────────────────────
     private void applyFilters() {
 
@@ -155,6 +181,7 @@ public class RecommendationsActivity extends AppCompatActivity {
             boolean matchesFilter;
 
             switch (currentFilter) {
+
                 case "Short":
                     matchesFilter = "Low".equalsIgnoreCase(h.getMaintenanceLevel());
                     break;
@@ -210,15 +237,5 @@ public class RecommendationsActivity extends AppCompatActivity {
 
             return false;
         });
-    }
-
-    // ─────────────────────────────
-    // HELPER
-    // ─────────────────────────────
-    private boolean listContainsId(List<Hairstyle> list, int id) {
-        for (Hairstyle h : list) {
-            if (h.getId() == id) return true;
-        }
-        return false;
     }
 }
