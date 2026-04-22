@@ -1,7 +1,6 @@
 package com.example.barberbuddy;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -37,27 +36,19 @@ public class OnboardingActivity extends AppCompatActivity {
         animateIn(findViewById(R.id.btnGetStarted), 340);
         animateIn(findViewById(R.id.tvSkip), 400);
 
-        // Get Started button
+        // Mark onboarded and go to Login
         MaterialButton btnGetStarted = findViewById(R.id.btnGetStarted);
-        btnGetStarted.setOnClickListener(v -> {
-            // Mark onboarded
-            SharedPreferences prefs = getSharedPreferences("barberbuddy_prefs", MODE_PRIVATE);
-            prefs.edit().putBoolean("onboarded", true).apply();
+        btnGetStarted.setOnClickListener(v -> goToLogin());
 
-            startActivity(new Intent(this, MainActivity.class));
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            finish();
-        });
-
-        // Skip
         TextView tvSkip = findViewById(R.id.tvSkip);
-        tvSkip.setOnClickListener(v -> {
-            SharedPreferences prefs = getSharedPreferences("barberbuddy_prefs", MODE_PRIVATE);
-            prefs.edit().putBoolean("onboarded", true).apply();
-            startActivity(new Intent(this, RecommendationsActivity.class));
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            finish();
-        });
+        tvSkip.setOnClickListener(v -> goToLogin());
+    }
+
+    private void goToLogin() {
+        Prefs.setOnboarded(this, true);
+        startActivity(new Intent(this, LoginActivity.class));
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
     }
 
     private void animateIn(View view, long delayMs) {
