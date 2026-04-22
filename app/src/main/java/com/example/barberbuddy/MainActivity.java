@@ -246,21 +246,18 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCamera();
         } else {
-            cameraPermLauncher.launch(Manifest.permission.CAMERA);
+            // Route through the dedicated permission rationale screen
+            Prefs.setCameraPermissionAsked(this);
+            Intent intent = new Intent(this, CameraPermissionActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
     private void showPermissionDenied() {
-        new AlertDialog.Builder(this)
-                .setTitle("Permission needed")
-                .setMessage("Camera is required.")
-                .setPositiveButton("Settings", (d, w) -> {
-                    Intent i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    i.setData(Uri.fromParts("package", getPackageName(), null));
-                    startActivity(i);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        Intent intent = new Intent(this, CameraPermissionActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

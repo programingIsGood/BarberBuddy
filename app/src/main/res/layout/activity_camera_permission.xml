@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bb_dark_green"
+    android:padding="28dp">
+
+    <!-- ── RATIONALE SCREEN ── -->
+    <LinearLayout
+        android:id="@+id/layoutRationale"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Camera icon -->
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="📷"
+            android:textSize="40sp"
+            android:gravity="center"
+            android:background="@drawable/bg_icon_circle_gold"
+            android:layout_marginBottom="28dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Camera Access Required"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BarberBuddy uses your front camera to analyze your face shape and recommend the best hairstyles for you."
+            android:textSize="15sp"
+            android:textColor="#AAAAAA"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.5"
+            android:layout_marginTop="14dp"/>
+
+        <!-- How it's used card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#1A1A1A"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:layout_marginTop="28dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="How we use your camera:"
+                    android:textSize="13sp"
+                    android:textColor="#C9A84C"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"/>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="✓" android:textColor="#43A047" android:textSize="14sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Detect and analyze your face shape in real time" android:textSize="13sp" android:textColor="#CCCCCC" android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="✓" android:textColor="#43A047" android:textSize="14sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Generate personalized hairstyle recommendations" android:textSize="13sp" android:textColor="#CCCCCC" android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                    <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="✗" android:textColor="#E53935" android:textSize="14sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="We never record, store, or share your camera feed" android:textSize="13sp" android:textColor="#CCCCCC" android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAllow"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Allow Camera Access"
+            android:textSize="16sp"
+            android:textColor="#0A0A0A"
+            android:textStyle="bold"
+            app:backgroundTint="#C9A84C"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="28dp"/>
+
+        <TextView
+            android:id="@+id/btnSkip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Not now"
+            android:textSize="14sp"
+            android:textColor="#555555"
+            android:gravity="center"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- ── DENIED (soft) SCREEN ── -->
+    <LinearLayout
+        android:id="@+id/layoutDenied"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🚫"
+            android:textSize="56sp"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Camera Permission Denied"
+            android:textSize="22sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Without camera access, BarberBuddy cannot scan your face shape. The core feature won't work."
+            android:textSize="14sp"
+            android:textColor="#AAAAAA"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginTop="12dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Try Again"
+            android:textColor="#0A0A0A"
+            android:textStyle="bold"
+            app:backgroundTint="#C9A84C"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="32dp"/>
+    </LinearLayout>
+
+    <!-- ── PERMANENTLY DENIED SCREEN ── -->
+    <LinearLayout
+        android:id="@+id/layoutPermanentDenied"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚙️"
+            android:textSize="56sp"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enable Camera in Settings"
+            android:textSize="22sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Camera permission was permanently denied. To use BarberBuddy, go to:\n\nSettings → Apps → BarberBuddy → Permissions → Camera → Allow"
+            android:textSize="14sp"
+            android:textColor="#AAAAAA"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginTop="12dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoSettings"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Open App Settings"
+            android:textColor="#0A0A0A"
+            android:textStyle="bold"
+            app:backgroundTint="#C9A84C"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="32dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

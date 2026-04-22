@@ -2,99 +2,173 @@ package com.example.barberbuddy;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Patterns;
+
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
- * Handles local user accounts stored in SharedPreferences.
- * Each account is stored as: "user_<email>" → hashed password (simple).
- * Logged-in session: "session_email" in barberbuddy_prefs.
+ * UserManager — local auth logic.
+ *
+ * Passwords are NEVER stored in plain text. Each password is hashed with
+ * SHA-256 + a per-user random salt before it is persisted.
+ *
+ * For production, replace the SharedPreferences store with a call to your
+ * backend (AWS Cognito, Firebase Auth, etc.).
  */
 public class UserManager {
 
-    private static final String PREFS_ACCOUNTS = "bb_accounts";
-    private static final String PREFS_SESSION  = "barberbuddy_prefs";
-    private static final String KEY_SESSION    = "session_email";
-    private static final String KEY_NAME_PREFIX = "name_";
-    private static final String PREFIX         = "user_";
+    // Minimum password rules
+    private static final int  MIN_PASSWORD_LEN   = 8;
+    private static final Pattern HAS_UPPERCASE   = Pattern.compile("[A-Z]");
+    private static final Pattern HAS_DIGIT       = Pattern.compile("[0-9]");
+    private static final Pattern HAS_SPECIAL     = Pattern.compile("[!@#\\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]");
 
-    // ── Registration ──────────────────────────────────────────────
+    private static final String USER_PREFS = "barberbuddy_users";
 
-    /** Returns null on success, or an error message. */
+    // ── Public API ─────────────────────────────────────────────────────────────
+
+    /**
+     * Register a new user.
+     * @return null on success, or an error message string on failure.
+     */
     public static String register(Context ctx, String name, String email, String password) {
-        if (name == null || name.trim().isEmpty())
-            return "Name is required.";
-        if (email == null || !email.contains("@"))
-            return "Enter a valid email.";
-        if (password == null || password.length() < 6)
-            return "Password must be at least 6 characters.";
+        // --- Basic field validation ---
+        if (name.isEmpty())  return "Name is required.";
+        if (name.length() < 2) return "Name must be at least 2 characters.";
 
-        SharedPreferences prefs = ctx.getSharedPreferences(PREFS_ACCOUNTS, Context.MODE_PRIVATE);
-        String key = PREFIX + email.toLowerCase().trim();
+        String emailError = validateEmail(email);
+        if (emailError != null) return emailError;
 
-        if (prefs.contains(key))
+        String passError = validatePassword(password);
+        if (passError != null) return passError;
+
+        SharedPreferences prefs = ctx.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+
+        // --- Check for existing account ---
+        if (prefs.contains(key(email, "salt"))) {
             return "An account with this email already exists.";
+        }
 
+        // --- Hash password with a fresh salt ---
+        String salt   = generateSalt();
+        String hashed = hashPassword(password, salt);
+
+        if (hashed == null) return "Registration failed. Please try again.";
+
+        // --- Persist user ---
+        String userId = UUID.randomUUID().toString();
         prefs.edit()
-             .putString(key, hash(password))
-             .putString(KEY_NAME_PREFIX + email.toLowerCase().trim(), name.trim())
-             .apply();
+                .putString(key(email, "id"),       userId)
+                .putString(key(email, "name"),     name)
+                .putString(key(email, "salt"),     salt)
+                .putString(key(email, "password"), hashed)
+                .apply();
+
         return null; // success
     }
 
-    // ── Login ──────────────────────────────────────────────────────
-
-    /** Returns null on success, or an error message. */
+    /**
+     * Log in an existing user.
+     * @return null on success, or an error message string on failure.
+     */
     public static String login(Context ctx, String email, String password) {
-        if (email == null || email.trim().isEmpty())
-            return "Enter your email.";
-        if (password == null || password.isEmpty())
-            return "Enter your password.";
+        if (email.isEmpty() || password.isEmpty()) {
+            return "Please enter your email and password.";
+        }
 
-        SharedPreferences prefs = ctx.getSharedPreferences(PREFS_ACCOUNTS, Context.MODE_PRIVATE);
-        String key = PREFIX + email.toLowerCase().trim();
+        String emailError = validateEmail(email);
+        if (emailError != null) return emailError;
 
-        if (!prefs.contains(key))
-            return "No account found with this email.";
+        SharedPreferences prefs = ctx.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
 
-        String stored = prefs.getString(key, "");
-        if (!stored.equals(hash(password)))
-            return "Incorrect password.";
+        String salt   = prefs.getString(key(email, "salt"),     null);
+        String stored = prefs.getString(key(email, "password"), null);
 
-        // Save session
-        ctx.getSharedPreferences(PREFS_SESSION, Context.MODE_PRIVATE)
-           .edit().putString(KEY_SESSION, email.toLowerCase().trim()).apply();
+        if (salt == null || stored == null) {
+            // No account found — same message to avoid account enumeration
+            return "Invalid email or password.";
+        }
+
+        String hashed = hashPassword(password, salt);
+        if (hashed == null || !hashed.equals(stored)) {
+            return "Invalid email or password.";
+        }
+
+        // --- Create session ---
+        String userId = prefs.getString(key(email, "id"),   UUID.randomUUID().toString());
+        String name   = prefs.getString(key(email, "name"), "");
+        SessionManager.getInstance(ctx).createSession(userId, name, email);
+
         return null; // success
     }
 
-    // ── Session helpers ────────────────────────────────────────────
+    // ── Validation helpers ─────────────────────────────────────────────────────
 
-    public static boolean isLoggedIn(Context ctx) {
-        return getLoggedInEmail(ctx) != null;
+    public static String validateEmail(String email) {
+        if (email.isEmpty()) return "Email is required.";
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            return "Please enter a valid email address.";
+        }
+        return null;
     }
 
-    public static String getLoggedInEmail(Context ctx) {
-        String e = ctx.getSharedPreferences(PREFS_SESSION, Context.MODE_PRIVATE)
-                      .getString(KEY_SESSION, null);
-        return (e != null && !e.isEmpty()) ? e : null;
+    public static String validatePassword(String password) {
+        if (password.isEmpty()) return "Password is required.";
+        if (password.length() < MIN_PASSWORD_LEN) {
+            return "Password must be at least " + MIN_PASSWORD_LEN + " characters.";
+        }
+        if (!HAS_UPPERCASE.matcher(password).find()) {
+            return "Password must contain at least one uppercase letter.";
+        }
+        if (!HAS_DIGIT.matcher(password).find()) {
+            return "Password must contain at least one number.";
+        }
+        if (!HAS_SPECIAL.matcher(password).find()) {
+            return "Password must contain at least one special character.";
+        }
+        return null;
     }
 
-    public static String getLoggedInName(Context ctx) {
-        String email = getLoggedInEmail(ctx);
-        if (email == null) return "User";
-        return ctx.getSharedPreferences(PREFS_ACCOUNTS, Context.MODE_PRIVATE)
-                  .getString(KEY_NAME_PREFIX + email, "User");
+    /**
+     * Calculates password strength: 0 (weak) – 4 (strong).
+     */
+    public static int passwordStrength(String password) {
+        if (password == null || password.isEmpty()) return 0;
+        int score = 0;
+        if (password.length() >= MIN_PASSWORD_LEN)           score++;
+        if (HAS_UPPERCASE.matcher(password).find())          score++;
+        if (HAS_DIGIT.matcher(password).find())              score++;
+        if (HAS_SPECIAL.matcher(password).find())            score++;
+        return score;
     }
 
-    public static void logout(Context ctx) {
-        ctx.getSharedPreferences(PREFS_SESSION, Context.MODE_PRIVATE)
-           .edit().remove(KEY_SESSION).apply();
+    // ── Crypto ────────────────────────────────────────────────────────────────
+
+    private static String generateSalt() {
+        byte[] salt = new byte[16];
+        new SecureRandom().nextBytes(salt);
+        return Base64.getEncoder().encodeToString(salt);
     }
 
-    // ── Utility ────────────────────────────────────────────────────
+    private static String hashPassword(String password, String salt) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(Base64.getDecoder().decode(salt));
+            byte[] hash = md.digest(password.getBytes("UTF-8"));
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-    /** Very simple hash — sufficient for local offline storage. */
-    private static String hash(String input) {
-        int h = 31;
-        for (char c : input.toCharArray()) h = h * 31 + c;
-        return String.valueOf(h);
+    // ── Key helper ─────────────────────────────────────────────────────────────
+
+    /** Namespaced prefs key so each user gets isolated storage. */
+    private static String key(String email, String field) {
+        return email.toLowerCase().trim() + "." + field;
     }
 }
